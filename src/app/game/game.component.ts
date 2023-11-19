@@ -11,14 +11,16 @@ import { Game } from '../../models/game';
 })
 export class GameComponent implements OnInit {
   pickCardAnimation = false;
-  game: Game;
+  game: Game | undefined;
+  
 
   ngOnInit(): void {
-    this.newGame;
+    this.newGame();
   }
 
   newGame() {
     this.game = new Game();
+    console.log(this.game);
   }
 
   takeCard() {
