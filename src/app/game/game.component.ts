@@ -1,16 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Game } from '../../models/game';
-import { PlayerComponent } from "../player/player.component";
+import { Component } from '@angular/core';
+import { Game } from '../../assets/models/game';
 
 @Component({
-    selector: 'app-game',
-    standalone: true,
-    templateUrl: './game.component.html',
-    styleUrl: './game.component.scss',
-    imports: [CommonModule, PlayerComponent]
+  selector: 'app-game',
+  templateUrl: './game.component.html',
+  styleUrl: './game.component.scss'
 })
-export class GameComponent implements OnInit {
+export class GameComponent {
+
   pickCardAnimation = false;
   currentCard: string = '';
   game: Game | undefined;
@@ -38,4 +35,5 @@ export class GameComponent implements OnInit {
     }, 1000);
   }
 }
+
 }
