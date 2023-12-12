@@ -15,6 +15,15 @@ for(let i=1; i < 14; i++){
     shuffle(this.stack);
 }
 
+public toJson(){
+    return {
+      players: this.players,
+      stack: this.stack,
+      playedCard: this.playedCards,
+      currentPlayer: this.currentPlayer,
+    };
+}
+
 }
 
 function shuffle(array) {
