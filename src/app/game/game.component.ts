@@ -49,16 +49,17 @@ export class GameComponent {
       }
     }); */
 
-    this.route.params.subscribe(async (params) => {
+    this.route.params.subscribe( (params) => {
       if (params['id']) {
         const unsub = onSnapshot(
           doc(this.getGamesColRef(), params['id']),
           (doc: any) => {
-            var gameData = doc.data();
+            let gameData = doc.data();
             this.game.currentPlayer = gameData.currentplayer;
             this.game.playedCards = gameData.playedCard;
             this.game.players = gameData.players;
             this.game.stack = gameData.stack;
+            console.log("Data written")
           }
         );
       }
@@ -69,7 +70,7 @@ export class GameComponent {
     return collection(this.firestore, 'games');
   }
 
-  async newGame() {
+   async newGame() {
     this.game = new Game();
     /*     let gameInfo = await addDoc(this.getGamesColRef(), {game: this.game.toJson()})
     console.log(gameInfo);  */
