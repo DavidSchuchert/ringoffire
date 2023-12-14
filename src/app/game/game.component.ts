@@ -16,8 +16,10 @@ import {
   query,
   where,
   setDoc,
+  getDoc,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
@@ -29,10 +31,38 @@ export class GameComponent {
   game: Game | undefined;
   gamesRef: 'games';
 
-
-  constructor(private firestore: Firestore, public dialog: MatDialog) {}
+  constructor(
+    private route: ActivatedRoute,
+    private firestore: Firestore,
+    public dialog: MatDialog
+  ) {}
   ngOnInit(): void {
     this.newGame();
+
+    /*     this.route.params.subscribe((params) => {
+      console.log(params['id']);
+    });
+
+     this.route.params.subscribe(async (params) => {
+      if (params['id']) {
+        console.log("Dokumentdaten:", await getDoc(doc(this.getGamesColRef(), params['id'])));
+      }
+    }); */
+
+    this.route.params.subscribe(async (params) => {
+      if (params['id']) {
+        const unsub = onSnapshot(
+          doc(this.getGamesColRef(), params['id']),
+          (doc: any) => {
+            var gameData = doc.data();
+            this.game.currentPlayer = gameData.currentplayer;
+            this.game.playedCards = gameData.playedCard;
+            this.game.players = gameData.players;
+            this.game.stack = gameData.stack;
+          }
+        );
+      }
+    });
   }
 
   getGamesColRef() {
@@ -41,11 +71,8 @@ export class GameComponent {
 
   async newGame() {
     this.game = new Game();
-    await setDoc(doc(this.getGamesColRef()), {
-      name: (this.game.toJson())
-    });
-    
-    console.log(this.game);
+    /*     let gameInfo = await addDoc(this.getGamesColRef(), {game: this.game.toJson()})
+    console.log(gameInfo);  */
   }
 
   takeCard() {
