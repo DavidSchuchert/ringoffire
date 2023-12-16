@@ -26,8 +26,6 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './game.component.scss',
 })
 export class GameComponent {
-  pickCardAnimation = false;
-  currentCard: string = '';
   game: Game = new Game();
   gamesRef: 'games';
   gameId: string;
@@ -48,11 +46,16 @@ export class GameComponent {
         const unsub = onSnapshot(
           doc(this.getGamesColRef(), params['id']),
           (doc: any) => {
-            let gameData = doc.data();
+            let gameData = doc.data();        
+            
             this.game.currentPlayer = gameData.currentPlayer;
             this.game.playedCards = gameData.playedCard;
             this.game.players = gameData.players;
             this.game.stack = gameData.stack;
+            this.game.pickCardAnimation = gameData.pickCardAnimation;
+            this.game.currentCard = gameData.currentCard;
+
+
             console.log('Data written', gameData.players);
           }
         );
@@ -69,20 +72,21 @@ export class GameComponent {
   }
 
   takeCard() {
-    if (!this.pickCardAnimation) {
-      this.currentCard = this.game.stack.pop();
-      console.log(this.currentCard);
-      this.pickCardAnimation = true;
-      console.log('New Card:' + this.currentCard);
-      console.log('game is', this.game);
+
+    if (!this.game.pickCardAnimation) {
+      this.game.currentCard = this.game.stack.pop();
+      this.game.pickCardAnimation = true;
 
       this.game.currentPlayer++;
       this.game.currentPlayer =
         this.game.currentPlayer % this.game.players.length;
-      this.saveGame();
+        this.saveGame();
+        console.log(this.game.currentPlayer);
+
       setTimeout(() => {
-        this.game.playedCards.push(this.currentCard);
-        this.pickCardAnimation = false;
+        this.game.playedCards.push(this.game.currentCard);
+        this.game.pickCardAnimation = false;
+        this.saveGame();
       }, 1000);
     }
   }
