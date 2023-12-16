@@ -16,7 +16,7 @@ export class StartScreenComponent {
   async newGame() {
     try {
       let game = new Game();
-      const gameInfo = await addDoc(this.getGamesColRef(), {game: game.toJson()});
+      const gameInfo = await addDoc(this.getGamesColRef(), game.toJson());
       console.log(gameInfo);
 
       if (gameInfo.id) {
