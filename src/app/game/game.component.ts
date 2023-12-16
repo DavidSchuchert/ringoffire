@@ -28,7 +28,7 @@ import { ActivatedRoute } from '@angular/router';
 export class GameComponent {
   pickCardAnimation = false;
   currentCard: string = '';
-  game: Game | undefined;
+  game: Game = new Game();
   gamesRef: 'games';
   gameId: string;
 
@@ -40,7 +40,7 @@ export class GameComponent {
     public dialog: MatDialog
   ) {}
   ngOnInit(): void {
-    this.newGame();
+   this.newGame();
     this.route.params.subscribe((params) => {
       this.gameId = params['id'];
       if (params['id'] /*  && this.game == undefined */) {
@@ -49,28 +49,7 @@ export class GameComponent {
           doc(this.getGamesColRef(), params['id']),
           (doc: any) => {
             let gameData = doc.data();
-            console.log('currentplayer:', this.game.currentPlayer);
-
-            console.log(
-              'gameData.currentplayer (from Firebase):',
-              gameData.currentplayer
-            );
-            console.log(
-              'Type of gameData.currentplayer:',
-              typeof gameData.currentplayer
-            );
-
-            this.game.currentPlayer = Number(gameData.currentplayer);
-
-            console.log(
-              'Current Player after assignment:',
-              this.game.currentPlayer
-            );
-            console.log(
-              'Type of Current Player:',
-              typeof this.game.currentPlayer
-            );
-
+            this.game.currentPlayer = gameData.currentPlayer;
             this.game.playedCards = gameData.playedCard;
             this.game.players = gameData.players;
             this.game.stack = gameData.stack;
