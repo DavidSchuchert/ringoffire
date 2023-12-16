@@ -28,10 +28,9 @@ import { ActivatedRoute } from '@angular/router';
 export class GameComponent {
   pickCardAnimation = false;
   currentCard: string = '';
-  game: Game | undefined ;
+  game: Game | undefined;
   gamesRef: 'games';
   gameId: string;
-
 
   unsubList;
 
@@ -42,20 +41,40 @@ export class GameComponent {
   ) {}
   ngOnInit(): void {
     this.newGame();
-    this.route.params.subscribe( (params) => {
+    this.route.params.subscribe((params) => {
       this.gameId = params['id'];
-      if (params['id'] /*  && this.game == undefined */ ) {
-        console.log("ID:", params['id']);
+      if (params['id'] /*  && this.game == undefined */) {
+        console.log('ID:', params['id']);
         const unsub = onSnapshot(
           doc(this.getGamesColRef(), params['id']),
           (doc: any) => {
             let gameData = doc.data();
-            console.log("currentplayer:", this.game.currentPlayer);
-            this.game.currentPlayer = gameData.currentplayer;
+            console.log('currentplayer:', this.game.currentPlayer);
+
+            console.log(
+              'gameData.currentplayer (from Firebase):',
+              gameData.currentplayer
+            );
+            console.log(
+              'Type of gameData.currentplayer:',
+              typeof gameData.currentplayer
+            );
+
+            this.game.currentPlayer = Number(gameData.currentplayer);
+
+            console.log(
+              'Current Player after assignment:',
+              this.game.currentPlayer
+            );
+            console.log(
+              'Type of Current Player:',
+              typeof this.game.currentPlayer
+            );
+
             this.game.playedCards = gameData.playedCard;
             this.game.players = gameData.players;
             this.game.stack = gameData.stack;
-            console.log("Data written", gameData.players);
+            console.log('Data written', gameData.players);
           }
         );
       }
@@ -66,14 +85,12 @@ export class GameComponent {
     return collection(this.firestore, 'games');
   }
 
-   async newGame() {
+  async newGame() {
     this.game = new Game();
-
   }
 
   takeCard() {
     if (!this.pickCardAnimation) {
-      
       this.currentCard = this.game.stack.pop();
       console.log(this.currentCard);
       this.pickCardAnimation = true;
@@ -83,7 +100,7 @@ export class GameComponent {
       this.game.currentPlayer++;
       this.game.currentPlayer =
         this.game.currentPlayer % this.game.players.length;
-        this.saveGame();
+      this.saveGame();
       setTimeout(() => {
         this.game.playedCards.push(this.currentCard);
         this.pickCardAnimation = false;
@@ -94,19 +111,20 @@ export class GameComponent {
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogAddPlayerComponent);
     dialogRef.afterClosed().subscribe((name: string) => {
-      if (name && name.length < 0) {
+      if (name && name.length > 0) {
         this.game.players.push(name);
         this.saveGame();
       }
     });
   }
 
-  async saveGame(){
-
+  async saveGame() {
     console.log('test');
-   await  updateDoc(doc(collection(this.firestore, 'games'), this.gameId), this.game.toJson()).catch((err) => {
+    await updateDoc(
+      doc(collection(this.firestore, 'games'), this.gameId),
+      this.game.toJson()
+    ).catch((err) => {
       console.log(err);
     });
-
   }
 }
