@@ -39,18 +39,9 @@ export class GameComponent {
   ngOnInit(): void {
     this.newGame();
 
-    /*     this.route.params.subscribe((params) => {
-      console.log(params['id']);
-    });
-
-     this.route.params.subscribe(async (params) => {
-      if (params['id']) {
-        console.log("Dokumentdaten:", await getDoc(doc(this.getGamesColRef(), params['id'])));
-      }
-    }); */
-
     this.route.params.subscribe( (params) => {
-      if (params['id']) {
+      if (params['id'] && this.game == undefined) {
+        console.log(params['id'])
         const unsub = onSnapshot(
           doc(this.getGamesColRef(), params['id']),
           (doc: any) => {
@@ -59,7 +50,7 @@ export class GameComponent {
             this.game.playedCards = gameData.playedCard;
             this.game.players = gameData.players;
             this.game.stack = gameData.stack;
-            console.log("Data written")
+            console.log("Data written", this.game)
           }
         );
       }
