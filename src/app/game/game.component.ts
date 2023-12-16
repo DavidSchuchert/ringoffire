@@ -28,8 +28,11 @@ import { ActivatedRoute } from '@angular/router';
 export class GameComponent {
   pickCardAnimation = false;
   currentCard: string = '';
-  game: Game | undefined;
+  game: Game | undefined ;
   gamesRef: 'games';
+
+
+  unsubList;
 
   constructor(
     private route: ActivatedRoute,
@@ -39,18 +42,21 @@ export class GameComponent {
   ngOnInit(): void {
     this.newGame();
 
+
+
+
     this.route.params.subscribe( (params) => {
-      if (params['id'] && this.game == undefined) {
-        console.log(params['id'])
+      if (params['id'] /*  && this.game == undefined */ ) {
+        console.log("ID:", params['id'])
         const unsub = onSnapshot(
           doc(this.getGamesColRef(), params['id']),
           (doc: any) => {
             let gameData = doc.data();
-            this.game.currentPlayer = gameData.currentplayer;
-            this.game.playedCards = gameData.playedCard;
-            this.game.players = gameData.players;
-            this.game.stack = gameData.stack;
-            console.log("Data written", this.game)
+            this.game.currentPlayer = gameData.game.currentplayer;
+            this.game.playedCards = gameData.game.playedCard;
+            this.game.players = gameData.game.players;
+            this.game.stack = gameData.game.stack;
+            console.log("Data written", gameData.game.players)
           }
         );
       }
@@ -63,8 +69,7 @@ export class GameComponent {
 
    async newGame() {
     this.game = new Game();
-    /*     let gameInfo = await addDoc(this.getGamesColRef(), {game: this.game.toJson()})
-    console.log(gameInfo);  */
+
   }
 
   takeCard() {
