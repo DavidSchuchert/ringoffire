@@ -1,7 +1,7 @@
 {
   "hosting": {
-    "public": "dist/ringoffire2/",
-    "site": "ringoffire2",
+    "target": "ringoffire2",
+    "public": "dist/ringoffire2/browser",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -15,4 +15,3 @@
     ]
   }
 }
-
