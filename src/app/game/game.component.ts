@@ -20,6 +20,7 @@ import {
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { EditPlayerComponent } from '../edit-player/edit-player.component';
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
@@ -29,6 +30,7 @@ export class GameComponent {
   game: Game = new Game();
   gamesRef: 'games';
   gameId: string;
+  gameOver = false;
 
   unsubList;
 
@@ -51,6 +53,7 @@ export class GameComponent {
             this.game.currentPlayer = gameData.currentPlayer;
             this.game.playedCards = gameData.playedCard;
             this.game.players = gameData.players;
+            this.game.player_images = gameData.player_images;
             this.game.stack = gameData.stack;
             this.game.pickCardAnimation = gameData.pickCardAnimation;
             this.game.currentCard = gameData.currentCard;
@@ -69,7 +72,11 @@ export class GameComponent {
   }
 
   takeCard() {
-    if (!this.game.pickCardAnimation && this.game.players.length >= 2) {
+
+    if(this.game.stack.length == 0){
+      this.gameOver = true;
+    } 
+    else if (!this.game.pickCardAnimation && this.game.players.length >= 2) {
       this.game.currentCard = this.game.stack.pop();
       this.game.pickCardAnimation = true;
 
@@ -84,9 +91,25 @@ export class GameComponent {
         this.game.pickCardAnimation = false;
         this.saveGame();
       }, 1000);
-    } else{
-      alert('Please add at least 2 players')
+    } else {
+      alert('Please add at least 2 players');
     }
+  }
+
+  editPlayer(playerId: number) {
+    console.log('Edit player', playerId);
+
+    const dialogRef = this.dialog.open(EditPlayerComponent);
+    dialogRef.afterClosed().subscribe((change: string) => {
+      if (change) {
+        if (change == 'DELETE') {
+          this.game.players.splice(playerId, 1);
+        } else {
+          this.game.player_images[playerId] = change;
+        }
+        this.saveGame();
+      }
+    });
   }
 
   openDialog(): void {
@@ -94,6 +117,7 @@ export class GameComponent {
     dialogRef.afterClosed().subscribe((name: string) => {
       if (name && name.length > 0) {
         this.game.players.push(name);
+        this.game.player_images.push('1.webp');
         this.saveGame();
       }
     });

@@ -1,0 +1,23 @@
+.profile-picture{
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+    cursor:pointer;
+
+    &:hover{
+        filter:brightness(1.15)
+    }
+}
+
+.player_images_change{
+display:flex;
+flex-direction: row;
+}
+
+.mat-mdc-dialog-surface{
+padding: 25px !important;
+}
+
+.mdc-dialog__surface{
+    padding: 25px !important;
+}

@@ -20,6 +20,7 @@ import {MatCardModule} from '@angular/material/card';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { PlayerMobileComponent } from './player-mobile/player-mobile.component';
+import { EditPlayerComponent } from './edit-player/edit-player.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { PlayerMobileComponent } from './player-mobile/player-mobile.component';
     StartScreenComponent,
     DialogAddPlayerComponent,
     GameInfoComponent,
-    PlayerMobileComponent
+    PlayerMobileComponent,
+    EditPlayerComponent
   ],
   imports: [
     BrowserModule,
